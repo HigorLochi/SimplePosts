@@ -1,0 +1,3 @@
+CREATE TABLE IF NOT EXISTS `simple_posts`.`postimages` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY
+)
