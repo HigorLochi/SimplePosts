@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS `simple_posts`.`posts` (
     `idimage` BIGINT,
     `title` VARCHAR(255) NOT NULL,
     `text` MEDIUMTEXT NOT NULL,
+    `createdat` DATETIME NOT NULL,
     FOREIGN KEY (iduser) REFERENCES users(id),
     FOREIGN KEY (idimage) REFERENCES postimages(id)
 )

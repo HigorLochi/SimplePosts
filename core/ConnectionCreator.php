@@ -14,14 +14,18 @@ class ConnectionCreator{
 
     public function __construct() {}
 
-    public function create(bool $database = true): PDO{
-        try{
-            return new PDO($this->connectionString($database), $this->username, $this->password, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]);
-        }catch(PDOException $e){
-            die("Database connection failed: " . $e->getMessage());
-        }
+    public function createWithDatabase(){
+        return $this->create();
+    }
+
+    public function createWithoutDatabase(){
+        return $this->create(false);
+    }
+
+    private function create(bool $database = true): PDO|PDOException{
+        return new PDO($this->connectionString($database), $this->username, $this->password, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
     }
 
     private function connectionString(bool $database = true): string{
