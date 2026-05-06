@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use app\models\UserModel;
 
-class UserController extends AbstractController{
+class UsersController extends AbstractController{
     private $userRepository;
 
     public function __construct($userRepository) {
@@ -28,7 +28,7 @@ class UserController extends AbstractController{
     public function insert(){
         $response = null;
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if($this->isPostMethod()) {
             if($this->userRepository->insert($_POST))
                 $response = "User created.";
             else 
@@ -42,7 +42,7 @@ class UserController extends AbstractController{
         $id = (int) $_GET['id'];
         $response = null;
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if($this->isPostMethod()) {
             $_POST['id'] = $id;
             if($this->userRepository->update($_POST))
                 $response = "User updated.";

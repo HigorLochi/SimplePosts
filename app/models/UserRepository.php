@@ -17,6 +17,15 @@ class UserRepository extends AbstractRepository{
         return $query->fetchAll();
     }
 
+    public function fetchById(int $id): UserModel|bool {
+        $query = $this->pdo->prepare("SELECT * FROM $this->tableName WHERE id = :id");
+        $query->bindValue(":id", $id);
+        $query->execute();
+        $query->setFetchMode(PDO::FETCH_CLASS, UserModel::class);
+
+        return $query->fetch();
+    }
+
     public function fetchByEmail(string $email): UserModel|bool {
         $query = $this->pdo->prepare("SELECT * FROM $this->tableName WHERE email = :email");
         $query->bindValue(":email", $email);

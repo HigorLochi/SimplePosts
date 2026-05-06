@@ -41,22 +41,6 @@ class PostRepository extends AbstractRepository{
         }
     }
 
-    public function update(array $post): bool {
-        try{
-            $query = $this->pdo->prepare("UPDATE $this->tableName SET name = :name, birthdate = :birthdate, phone = :phone, email = :email, postalcode = :postalcode WHERE id = :id");
-
-            $query->bindValue(':id', $post['id']);
-            $query->bindValue(':name', $post['name']);
-            $query->bindValue(':email', $post['email']);
-
-            $query->execute();
-
-            return true;
-        }catch(Exception $e){
-            return false;
-        }
-    }
-
     public function deleteById(int $id): bool {
         try{
             $query = $this->pdo->prepare("DELETE FROM $this->tableName WHERE id = :id");

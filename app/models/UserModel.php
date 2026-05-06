@@ -21,36 +21,36 @@ class UserModel{
     // }
 
     // GETTERS
-    public function getId(){
+    public function getId(): int{
         return $this->id;
     }
 
-    public function getName(){
+    public function getName(): string{
         return $this->name;
     }
 
-    public function getEmail(){
+    public function getEmail(): string{
         return $this->email;
     }
 
-    public function getPassword(){
+    public function getPassword(): string{
         return $this->password;
     }
 
-    public function isAdmin(){
-        return $this->admin;
+    public function isAdmin(): bool{
+        return $this->isadmin;
     }
 
-    public function getIdPhoto(){
+    public function getIdPhoto(): int{
         return $this->idphoto;
     }
 
     // SETTERS
-    public function setName(string $name){
+    public function setName(string $name): void{
         $this->name = $name;
     }
 
-    public function setEmail(string $email){
+    public function setEmail(string $email): void{
         $this->email = $email;
     }
 }

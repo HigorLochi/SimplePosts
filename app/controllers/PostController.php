@@ -5,19 +5,23 @@ namespace app\controllers;
 use app\models\UserModel;
 
 class PostController extends AbstractController{
+    public $session;
+    private $postRepository;
     private $userRepository;
 
-    public function __construct($userRepository) {
+    public function __construct($session, $postRepository, $userRepository) {
+        $this->session = $session;
+        $this->postRepository = $postRepository;
         $this->userRepository = $userRepository;
     }
 
     public function list(){
         $limitPerPage = 10;
         $page = (isset($_GET['page']) && (int) $_GET['page'] > 0) ? (int) $_GET['page'] : 1;
-        $count = $this->userRepository->countRows();
+        $count = $this->postRepository->countRows();
 
-        $this->render('user/list', [
-            'rows' =>  $this->userRepository->fetchAll($limitPerPage, $page),
+        $this->render('post/list', [
+            'rows' =>  $this->postRepository->fetchAll($limitPerPage, $page),
             'count' =>  $count,
             'limitPerPage' => $limitPerPage,
             'page' => $page,
@@ -28,8 +32,8 @@ class PostController extends AbstractController{
     public function insert(){
         $response = null;
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if($this->userRepository->insert($_POST))
+        if($this->isPostMethod()) {
+            if($this->postRepository->insert($_POST))
                 $response = "User created.";
             else 
                 $response = "An error has ocurred.";
@@ -42,19 +46,19 @@ class PostController extends AbstractController{
         $id = (int) $_GET['id'];
         $response = null;
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if($this->isPostMethod()) {
             $_POST['id'] = $id;
-            if($this->userRepository->update($_POST))
+            if($this->postRepository->update($_POST))
                 $response = "User updated.";
             else 
                 $response = "An error has ocurred.";
         }
         
-        $this->render('user/form', ['user' =>  $this->userRepository->fetchById($id), 'message' => $response]);
+        $this->render('user/form', ['user' =>  $this->postRepository->fetchById($id), 'message' => $response]);
     }
 
     public function delete(){
         $id = (int) $_POST['id'];
-        $this->userRepository->deleteById($id);
+        $this->postRepository->deleteById($id);
     }
 }
