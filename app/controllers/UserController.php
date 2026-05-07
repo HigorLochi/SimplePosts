@@ -4,24 +4,27 @@ namespace app\controllers;
 
 use app\models\UserModel;
 
-class UsersController extends AbstractController{
+class UserController extends AbstractController{
+    public $session;
     private $userRepository;
 
-    public function __construct($userRepository) {
+    public function __construct($session, $userRepository) {
+        $this->session = $session;
         $this->userRepository = $userRepository;
     }
 
     public function list(){
         $limitPerPage = 10;
-        $page = (isset($_GET['page']) && (int) $_GET['page'] > 0) ? (int) $_GET['page'] : 1;
         $count = $this->userRepository->countRows();
+        $pagesCount = ceil($count / $limitPerPage);
+        $page = $this->isValidPage($pagesCount) ? (int) $_GET['page'] : 1;
 
         $this->render('user/list', [
             'rows' =>  $this->userRepository->fetchAll($limitPerPage, $page),
             'count' =>  $count,
             'limitPerPage' => $limitPerPage,
             'page' => $page,
-            'pagesCount' => ceil($count / $limitPerPage)
+            'pagesCount' => $pagesCount
         ]);
     }
 

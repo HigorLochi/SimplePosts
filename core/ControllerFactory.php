@@ -8,8 +8,8 @@ use app\controllers\LoginController;
 use app\controllers\PostController;
 use app\controllers\UserController;
 use app\controllers\NotFoundController;
-use app\models\PostRepository;
-use app\models\UserRepository;
+use app\repositories\PostRepository;
+use app\repositories\UserRepository;
 
 class ControllerFactory {
     public function __construct(

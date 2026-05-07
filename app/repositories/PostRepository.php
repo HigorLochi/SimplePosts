@@ -1,8 +1,9 @@
 <?php
 
-namespace app\models;
+namespace app\repositories;
 
 use PDO;
+use app\models\PostModel;
 
 class PostRepository extends AbstractRepository{
     private $tableName = 'posts';
@@ -26,12 +27,13 @@ class PostRepository extends AbstractRepository{
 
     public function insert(array $post): bool {
         try{
-            $query = $this->pdo->prepare("INSERT INTO $this->tableName(iduser, idimage, title, text) VALUES(:iduser, :idimage, :title, :text)");
+            $query = $this->pdo->prepare("INSERT INTO $this->tableName(iduser, title, text, createdat) VALUES(:iduser, :title, :text, :createdat)");
 
             $query->bindValue(':iduser', $post['iduser'], PDO::PARAM_INT);
-            $query->bindValue(':idimage', $post['idimage'], PDO::PARAM_INT);
+            // $query->bindValue(':idimage', $post['idimage'], PDO::PARAM_INT);
             $query->bindValue(':title', $post['title']);
             $query->bindValue(':text', $post['text']);
+            $query->bindValue(':createdat', $post['createdat']);
 
             $query->execute();
 

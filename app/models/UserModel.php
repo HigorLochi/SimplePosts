@@ -3,12 +3,12 @@
 namespace app\models;
 
 class UserModel{
-    private int $id; 
-    private string $name;
-    private string $email;
-    private string $password;
-    private bool $isadmin;
-    private ?int $idphoto;
+    private int $id = 0; 
+    private string $name = "";
+    private string $email = "";
+    private string $password = "";
+    private bool $isadmin = false;
+    private ?int $idphoto = null;
 
     public function __construct(){}
 

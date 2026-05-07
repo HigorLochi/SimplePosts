@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\repositories;
 
 abstract class AbstractRepository{
     private $tableName;

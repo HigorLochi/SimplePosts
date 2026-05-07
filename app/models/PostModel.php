@@ -3,12 +3,12 @@
 namespace app\models;
 
 class PostModel{
-    private int $id; 
-    private string $iduser;
-    private ?string $idimage;
-    private string $title;
-    private string $text;
-    private DateTime $createdat;
+    private int $id = 0; 
+    private string $iduser = "";
+    private ?string $idimage = "";
+    private string $title = "";
+    private string $text = "";
+    private string $createdat;
 
     public function __construct(){}
 
@@ -33,7 +33,7 @@ class PostModel{
         return $this->text;
     }
 
-    public function getCreatedAt(): DateTime{
+    public function getCreatedAt(): string{
         return $this->createdat;
     }
 

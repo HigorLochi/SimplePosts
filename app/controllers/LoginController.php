@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use app\services\Session;
-use app\models\UserRepository;
+use app\repositories\UserRepository;
 
 class LoginController extends AbstractController{
     public function __construct(Session $session, UserRepository $userRepository) {

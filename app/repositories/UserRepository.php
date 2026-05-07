@@ -1,8 +1,9 @@
 <?php
 
-namespace app\models;
+namespace app\repositories;
 
 use PDO;
+use app\models\UserModel;
 
 class UserRepository extends AbstractRepository{
     private $tableName = 'users';
@@ -44,11 +45,12 @@ class UserRepository extends AbstractRepository{
 
     public function insert(array $user): bool {
         try{
-            $query = $this->pdo->prepare("INSERT INTO $this->tableName(name, email, password) VALUES(:name, :email, :password)");
+            $query = $this->pdo->prepare("INSERT INTO $this->tableName(name, email, password, isadmin) VALUES(:name, :email, :password, :isadmin)");
 
             $query->bindValue(':name', $user['name']);
             $query->bindValue(':email', $user['email']);
-            $query->bindValue(':password', password_hash($user['password']));
+            $query->bindValue(':password', password_hash($user['password'], PASSWORD_DEFAULT));
+            $query->bindValue(':isadmin', $user['isadmin'], PDO::PARAM_BOOL);
 
             $query->execute();
 
@@ -60,11 +62,12 @@ class UserRepository extends AbstractRepository{
 
     public function update(array $user): bool {
         try{
-            $query = $this->pdo->prepare("UPDATE $this->tableName SET name = :name, birthdate = :birthdate, phone = :phone, email = :email, postalcode = :postalcode WHERE id = :id");
+            $query = $this->pdo->prepare("UPDATE $this->tableName SET name = :name, email = :email, isadmin = :isadmin WHERE id = :id");
 
-            $query->bindValue(':id', $user['id']);
+            $query->bindValue(':id', $user['id'], PDO::PARAM_INT);
             $query->bindValue(':name', $user['name']);
             $query->bindValue(':email', $user['email']);
+            $query->bindValue(':isadmin', $user['isadmin'], PDO::PARAM_BOOL);
 
             $query->execute();
 

@@ -2,7 +2,8 @@
 
 namespace app\controllers;
 
-use app\models\UserModel;
+use DateTime;
+use app\models\PostModel;
 
 class PostController extends AbstractController{
     public $session;
@@ -17,15 +18,16 @@ class PostController extends AbstractController{
 
     public function list(){
         $limitPerPage = 10;
-        $page = (isset($_GET['page']) && (int) $_GET['page'] > 0) ? (int) $_GET['page'] : 1;
         $count = $this->postRepository->countRows();
+        $pagesCount = ceil($count / $limitPerPage);
+        $page = $this->isValidPage($pagesCount) ? (int) $_GET['page'] : 1;
 
         $this->render('post/list', [
             'rows' =>  $this->postRepository->fetchAll($limitPerPage, $page),
             'count' =>  $count,
             'limitPerPage' => $limitPerPage,
             'page' => $page,
-            'pagesCount' => ceil($count / $limitPerPage)
+            'pagesCount' => $pagesCount
         ]);
     }
 
@@ -33,13 +35,16 @@ class PostController extends AbstractController{
         $response = null;
 
         if($this->isPostMethod()) {
+            $_POST['iduser'] = (int) $this->session->get('user_id');
+            $_POST['createdat'] = new DateTime()->format('Y-m-d H:i:s');
+
             if($this->postRepository->insert($_POST))
-                $response = "User created.";
+                $response = "Post created.";
             else 
                 $response = "An error has ocurred.";
         }
 
-        $this->render('user/form', ['user' =>  new UserModel(), 'message' => $response]);
+        $this->render('post/form', ['post' =>  new PostModel(), 'message' => $response]);
     }
 
     public function update(){
@@ -48,6 +53,7 @@ class PostController extends AbstractController{
 
         if($this->isPostMethod()) {
             $_POST['id'] = $id;
+
             if($this->postRepository->update($_POST))
                 $response = "User updated.";
             else 

@@ -19,6 +19,10 @@ abstract class AbstractController{
         require __DIR__ . $this->viewsPath . 'layout.php';
     }
 
+    protected function isValidPage($pagesCount){
+        return (isset($_GET['page']) && (int) $_GET['page'] > 0 && (int) $_GET['page'] <= $pagesCount);
+    }
+
     protected function isGetMethod(){
         return ($_SERVER['REQUEST_METHOD'] == 'GET');
     }
