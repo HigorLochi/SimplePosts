@@ -3,15 +3,23 @@
 namespace app\repositories;
 
 use PDO;
+use database\QueryBuilder;
 use app\models\PostModel;
 
 class PostRepository extends AbstractRepository{
     private $tableName = 'posts';
 
-    public function __construct(private PDO $pdo) {}
-
     public function fetchAll(int $limit, int $page): array {
-        $query = $this->pdo->prepare("SELECT * FROM $this->tableName ORDER BY createdat" . $this->limit($limit, $page));
+        $query = $this->pdo->prepare(
+            $this->queryBuilder
+                ->table($this->tableName)
+                ->select(['*'])
+                ->join(['iduser' => ['type' => 'INNER', 'table' => 'users', 'field' => 'id']])
+                ->order(["createdat"])
+                ->limit($limit, $page)
+                ->getQuery()
+            );
+            
         $query->execute();
         $query->setFetchMode(PDO::FETCH_CLASS, PostModel::class);
 
@@ -19,7 +27,13 @@ class PostRepository extends AbstractRepository{
     }
 
     public function countRows(): int {
-        $query = $this->pdo->prepare("SELECT COUNT(id) AS count FROM $this->tableName");
+        $query = $this->pdo->prepare(
+            $this->queryBuilder
+                ->table($this->tableName)
+                ->select(['COUNT(id) AS count'])
+                ->getQuery()
+            );
+
         $query->execute();
 
         return $query->fetch()['count'];
@@ -27,10 +41,14 @@ class PostRepository extends AbstractRepository{
 
     public function insert(array $post): bool {
         try{
-            $query = $this->pdo->prepare("INSERT INTO $this->tableName(iduser, title, text, createdat) VALUES(:iduser, :title, :text, :createdat)");
+            $query = $this->pdo->prepare(
+                $this->queryBuilder
+                    ->table($this->tableName)
+                    ->insert(['iduser', 'title', 'text', 'createdat'])
+                    ->getQuery()
+                );
 
             $query->bindValue(':iduser', $post['iduser'], PDO::PARAM_INT);
-            // $query->bindValue(':idimage', $post['idimage'], PDO::PARAM_INT);
             $query->bindValue(':title', $post['title']);
             $query->bindValue(':text', $post['text']);
             $query->bindValue(':createdat', $post['createdat']);
@@ -45,8 +63,16 @@ class PostRepository extends AbstractRepository{
 
     public function deleteById(int $id): bool {
         try{
-            $query = $this->pdo->prepare("DELETE FROM $this->tableName WHERE id = :id");
+            $query = $this->pdo->prepare(
+                $this->queryBuilder
+                    ->table($this->tableName)
+                    ->delete()
+                    ->where(['id'])
+                    ->getQuery()
+                );
+
             $query->bindValue(':id', $id);
+
             $query->execute();
 
             return true;

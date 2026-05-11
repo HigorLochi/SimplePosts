@@ -2,19 +2,16 @@
 
 namespace app\repositories;
 
+use PDO;
+use database\QueryBuilder;
+
 abstract class AbstractRepository{
     private $tableName;
-    
-    protected function limit(int $limit, int $page): string{
-        $query = "";
-        
-        if($limit > 0 && $page > 0) {
-            $query .= " LIMIT " . (($page - 1) * $limit);
+    protected PDO $pdo;
+    protected $queryBuilder;
 
-            if($limit > 0) $query .= ", $limit";
-        }else 
-            $query .= " LIMIT " . $limit;
-        
-        return $query;
+    public function __construct(PDO $pdo) {
+        $this->pdo = $pdo;
+        $this->queryBuilder = new QueryBuilder();
     }
 }

@@ -10,3 +10,7 @@ spl_autoload_register(function($class){
 function protectedVariableText($string){
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
+
+function limitText($string, $limit){
+    return (strlen($string) > $limit) ? substr($string, 0, $limit) . '...' : $string;
+}

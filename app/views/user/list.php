@@ -42,4 +42,4 @@
     </section>
     <?php require __DIR__ . '../../pagination.php'; ?>
 </div>
-<script src="../app/views/js/user/deleteuser.js"></script>
+<script src="../app/views/js/user/delete.js"></script>

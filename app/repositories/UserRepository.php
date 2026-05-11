@@ -8,10 +8,16 @@ use app\models\UserModel;
 class UserRepository extends AbstractRepository{
     private $tableName = 'users';
 
-    public function __construct(private PDO $pdo) {}
-
     public function fetchAll(int $limit, int $page): array {
-        $query = $this->pdo->prepare("SELECT * FROM $this->tableName ORDER BY name" . $this->limit($limit, $page));
+        $query = $this->pdo->prepare(
+            $this->queryBuilder
+                ->table($this->tableName)
+                ->select(['*'])
+                ->order(["name"])
+                ->limit($limit, $page)
+                ->getQuery()
+            );
+            
         $query->execute();
         $query->setFetchMode(PDO::FETCH_CLASS, UserModel::class);
 
@@ -19,7 +25,14 @@ class UserRepository extends AbstractRepository{
     }
 
     public function fetchById(int $id): UserModel|bool {
-        $query = $this->pdo->prepare("SELECT * FROM $this->tableName WHERE id = :id");
+        $query = $this->pdo->prepare(
+            $this->queryBuilder
+                ->table($this->tableName)
+                ->select(['*'])
+                ->where(['id'])
+                ->getQuery()
+            );
+
         $query->bindValue(":id", $id);
         $query->execute();
         $query->setFetchMode(PDO::FETCH_CLASS, UserModel::class);
@@ -28,7 +41,14 @@ class UserRepository extends AbstractRepository{
     }
 
     public function fetchByEmail(string $email): UserModel|bool {
-        $query = $this->pdo->prepare("SELECT * FROM $this->tableName WHERE email = :email");
+        $query = $this->pdo->prepare(
+            $this->queryBuilder
+                ->table($this->tableName)
+                ->select(['*'])
+                ->where(['email'])
+                ->getQuery()
+            );
+
         $query->bindValue(":email", $email);
         $query->execute();
         $query->setFetchMode(PDO::FETCH_CLASS, UserModel::class);
@@ -37,7 +57,13 @@ class UserRepository extends AbstractRepository{
     }
 
     public function countRows(): int {
-        $query = $this->pdo->prepare("SELECT COUNT(id) AS count FROM $this->tableName");
+        $query = $this->pdo->prepare(
+            $this->queryBuilder
+                ->table($this->tableName)
+                ->select(['COUNT(id) AS count'])
+                ->getQuery()
+            );
+
         $query->execute();
 
         return $query->fetch()['count'];
@@ -45,7 +71,12 @@ class UserRepository extends AbstractRepository{
 
     public function insert(array $user): bool {
         try{
-            $query = $this->pdo->prepare("INSERT INTO $this->tableName(name, email, password, isadmin) VALUES(:name, :email, :password, :isadmin)");
+            $query = $this->pdo->prepare(
+                $this->queryBuilder
+                    ->table($this->tableName)
+                    ->insert(['name', 'email', 'password', 'isadmin'])
+                    ->getQuery()
+                );
 
             $query->bindValue(':name', $user['name']);
             $query->bindValue(':email', $user['email']);
@@ -62,7 +93,13 @@ class UserRepository extends AbstractRepository{
 
     public function update(array $user): bool {
         try{
-            $query = $this->pdo->prepare("UPDATE $this->tableName SET name = :name, email = :email, isadmin = :isadmin WHERE id = :id");
+            $query = $this->pdo->prepare(
+                $this->queryBuilder
+                    ->table($this->tableName)
+                    ->update(['name', 'email', 'isadmin'])
+                    ->where(['id'])
+                    ->getQuery()
+                );
 
             $query->bindValue(':id', $user['id'], PDO::PARAM_INT);
             $query->bindValue(':name', $user['name']);
@@ -79,7 +116,14 @@ class UserRepository extends AbstractRepository{
 
     public function deleteById(int $id): bool {
         try{
-            $query = $this->pdo->prepare("DELETE FROM $this->tableName WHERE id = :id");
+            $query = $this->pdo->prepare(
+                $this->queryBuilder
+                    ->table($this->tableName)
+                    ->delete()
+                    ->where(['id'])
+                    ->getQuery()
+                );
+                
             $query->bindValue(':id', $id);
             $query->execute();
 

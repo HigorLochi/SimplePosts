@@ -35,10 +35,10 @@ class PostController extends AbstractController{
         $response = null;
 
         if($this->isPostMethod()) {
-            $_POST['iduser'] = (int) $this->session->get('user_id');
-            $_POST['createdat'] = new DateTime()->format('Y-m-d H:i:s');
-
-            if($this->postRepository->insert($_POST))
+            if($this->postRepository->insert(array_merge($_POST, [
+                'iduser' => (int) $this->session->get('user_id'),
+                'createdat' => new DateTime()->format('Y-m-d H:i:s')
+            ])))
                 $response = "Post created.";
             else 
                 $response = "An error has ocurred.";

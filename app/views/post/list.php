@@ -12,19 +12,24 @@
 				</div>
 				<div class="meta">
 					<time class="published" datetime="2015-11-01"><?= protectedVariableText($row->getCreatedAt()) ?></time>
-					<a href="#" class="author"><span class="name">Jane Doe</span><img src="../storage/userphotos/test.png" alt="" /></a>
+					<a href="#" class="author"><span class="name"><?= protectedVariableText(limitText($row->get('name'), 18)) ?></span><img src="../storage/userphotos/test.png" alt="" /></a>
 				</div>
 			</header>
 			<a class="image featured"><img src="../storage/postimages/test.jpg" alt="" /></a>
-			<p><?= protectedVariableText($row->getText()) ?></p>
+			<p><?= protectedVariableText(limitText($row->getText(), 550)) ?></p>
 			<footer>
 				<ul class="actions">
 					<li><a href="single.html" class="button large">Continue Reading</a></li>
 				</ul>
+				<?php if($this->session->get('user_admin')): ?>
+					<ul class="stats">
+						<li><a onclick="deletePost(<?= protectedVariableText($row->getId()); ?>)" class="icon solid fa-trash">Delete post</a></li>
+					</ul>
+				<?php endif; ?>
 			</footer>
 		</article>
 	<?php endforeach; ?>
 
 	<?php require __DIR__ . '../../pagination.php'; ?>
 </div>
-		
+<script src="../app/views/js/post/delete.js"></script>

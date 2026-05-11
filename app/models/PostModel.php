@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-class PostModel{
+class PostModel extends AbstractModel{
     private int $id = 0; 
     private string $iduser = "";
     private ?string $idimage = "";
