@@ -6,28 +6,35 @@ use DateTime;
 use app\models\PostModel;
 
 class PostController extends AbstractController{
-    public $session;
     private $postRepository;
-    private $userRepository;
 
-    public function __construct($session, $postRepository, $userRepository) {
-        $this->session = $session;
+    public function __construct($session, $postRepository) {
+        parent::__construct($session);
+
         $this->postRepository = $postRepository;
-        $this->userRepository = $userRepository;
+    }
+
+    public function single(){
+        $id = (int) $_GET['id'];
+        
+        $this->render('post/single', [
+            'post' =>  $this->postRepository->fetchById($id), 
+            'sessionInfo' => $this->getSessionInfo()
+        ]);
     }
 
     public function list(){
-        $limitPerPage = 10;
         $count = $this->postRepository->countRows();
-        $pagesCount = ceil($count / $limitPerPage);
+        $pagesCount = ceil($count / $this->limitPerPage);
         $page = $this->isValidPage($pagesCount) ? (int) $_GET['page'] : 1;
 
         $this->render('post/list', [
-            'rows' =>  $this->postRepository->fetchAll($limitPerPage, $page),
+            'rows' =>  $this->postRepository->fetchAll($this->limitPerPage, $page),
             'count' =>  $count,
-            'limitPerPage' => $limitPerPage,
+            'limitPerPage' => $this->limitPerPage,
             'page' => $page,
-            'pagesCount' => $pagesCount
+            'pagesCount' => $pagesCount,
+            'sessionInfo' => $this->getSessionInfo()
         ]);
     }
 
@@ -44,23 +51,11 @@ class PostController extends AbstractController{
                 $response = "An error has ocurred.";
         }
 
-        $this->render('post/form', ['post' =>  new PostModel(), 'message' => $response]);
-    }
-
-    public function update(){
-        $id = (int) $_GET['id'];
-        $response = null;
-
-        if($this->isPostMethod()) {
-            $_POST['id'] = $id;
-
-            if($this->postRepository->update($_POST))
-                $response = "User updated.";
-            else 
-                $response = "An error has ocurred.";
-        }
-        
-        $this->render('user/form', ['user' =>  $this->postRepository->fetchById($id), 'message' => $response]);
+        $this->render('post/form', [
+            'post' =>  new PostModel(), 
+            'sessionInfo' => $this->getSessionInfo(),
+            'message' => $response
+        ]);
     }
 
     public function delete(){

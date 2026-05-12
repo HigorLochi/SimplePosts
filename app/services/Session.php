@@ -30,4 +30,8 @@ class Session{
     public function isCreated(): bool{
         return !(session_status() === PHP_SESSION_NONE);
     }
+
+    public function isAuthenticated(): bool{
+        return $this->get('user_id') !== null;
+    }
 }

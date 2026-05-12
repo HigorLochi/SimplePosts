@@ -24,7 +24,7 @@
                             <td><?= protectedVariableText($row->getId()) ?></td>
                             <td><?= protectedVariableText($row->getName()) ?></td>
                             <td><?= protectedVariableText($row->getEmail()) ?></td>
-                            <td><?= protectedVariableText($row->isAdmin()) ?></td>
+                            <td><?= $row->isAdmin() ? "<a class='icon solid fa-user-check'/>" : "<a class='icon solid fa-user-minus'/>" ?></td>
                             <td>
                                 <a class="icon solid fa-edit" href="index.php?<?= http_build_query(['controller' => 'user', 'action' => 'update', 'id' => protectedVariableText($row->getId())]) ?>">
                                     <span class="label">Edit</span>

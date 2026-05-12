@@ -1795,6 +1795,7 @@ input, select, textarea {
 		letter-spacing: 0.25em;
 		text-transform: uppercase;
 		white-space: nowrap;
+		overflow: hidden;
 	}
 
 		.author .name {
@@ -1804,13 +1805,16 @@ input, select, textarea {
 			transition: border-bottom-color 0.2s ease;
 			border-bottom: dotted 1px rgba(160, 160, 160, 0.65);
 			display: block;
-			margin: 0 1.5em 0 0;
+			margin: 0 3em 0 0;
 		}
 
 		.author img {
 			border-radius: 100%;
 			display: block;
-			width: 4em;
+			width: 5em;
+			height: 5em;
+			object-fit: cover;
+			object-position: center center;
 		}
 
 		.author:hover .name {

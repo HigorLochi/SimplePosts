@@ -85,7 +85,7 @@ class UserRepository extends AbstractRepository{
 
             $query->execute();
 
-            return true;
+            return $this->pdo->lastInsertId();
         }catch(Exception $e){
             return false;
         }
@@ -104,7 +104,7 @@ class UserRepository extends AbstractRepository{
             $query->bindValue(':id', $user['id'], PDO::PARAM_INT);
             $query->bindValue(':name', $user['name']);
             $query->bindValue(':email', $user['email']);
-            $query->bindValue(':isadmin', $user['isadmin'], PDO::PARAM_BOOL);
+            $query->bindValue(':isadmin', $user['isadmin'] ?? 0 , PDO::PARAM_BOOL);
 
             $query->execute();
 

@@ -40,6 +40,7 @@ class QueryBuilder{
     }
 
     public function insert(array $fields){
+        $fiedsQuery = (sizeof($fields) > 0) ? implode(',', $fields) : "" ;
         $valuesQuery = "";
 
         foreach($fields as $idx => $field){
@@ -47,7 +48,7 @@ class QueryBuilder{
             if($idx + 1 < sizeof($fields)) $valuesQuery .= ", ";
         }
 
-        $this->query .= "INSERT INTO " . $this->table . "(" . implode(',', $fields) . ") VALUES($valuesQuery)";
+        $this->query .= "INSERT INTO " . $this->table . "(" . $fiedsQuery . ") VALUES($valuesQuery)";
         return $this;
     }
 
@@ -67,7 +68,7 @@ class QueryBuilder{
         $query = "WHERE ";
         
         foreach($fields as $idx => $field){
-            $query .= $field . " = :" . $field;
+            $query .= $field . " = :" . (strpos($field, '.') !== false ? explode('.', $field)[1] : $field);
             if($idx + 1 < sizeof($fields)) $query .= ", ";
         }
 

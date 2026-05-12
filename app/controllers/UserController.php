@@ -5,26 +5,26 @@ namespace app\controllers;
 use app\models\UserModel;
 
 class UserController extends AbstractController{
-    public $session;
     private $userRepository;
 
     public function __construct($session, $userRepository) {
-        $this->session = $session;
+        parent::__construct($session);
+        
         $this->userRepository = $userRepository;
     }
 
     public function list(){
-        $limitPerPage = 10;
         $count = $this->userRepository->countRows();
-        $pagesCount = ceil($count / $limitPerPage);
+        $pagesCount = ceil($count / $this->limitPerPage);
         $page = $this->isValidPage($pagesCount) ? (int) $_GET['page'] : 1;
 
         $this->render('user/list', [
-            'rows' =>  $this->userRepository->fetchAll($limitPerPage, $page),
+            'rows' =>  $this->userRepository->fetchAll($this->limitPerPage, $page),
             'count' =>  $count,
-            'limitPerPage' => $limitPerPage,
+            'limitPerPage' => $this->limitPerPage,
             'page' => $page,
-            'pagesCount' => $pagesCount
+            'pagesCount' => $pagesCount,
+            'sessionInfo' => $this->getSessionInfo(),
         ]);
     }
 
@@ -32,13 +32,14 @@ class UserController extends AbstractController{
         $response = null;
 
         if($this->isPostMethod()) {
-            if($this->userRepository->insert($_POST))
-                $response = "User created.";
-            else 
-                $response = "An error has ocurred.";
+            $response = $this->userRepository->insert($_POST) ? "User created." : "An error has ocurred.";
         }
 
-        $this->render('user/form', ['user' =>  new UserModel(), 'message' => $response]);
+        $this->render('user/form', [
+            'user' =>  new UserModel(), 
+            'sessionInfo' => $this->getSessionInfo(),
+            'message' => $response
+        ]);
     }
 
     public function update(){
@@ -47,13 +48,14 @@ class UserController extends AbstractController{
 
         if($this->isPostMethod()) {
             $_POST['id'] = $id;
-            if($this->userRepository->update($_POST))
-                $response = "User updated.";
-            else 
-                $response = "An error has ocurred.";
+            $response = $this->userRepository->update($_POST) ? "User updated." : "An error has ocurred.";
         }
         
-        $this->render('user/form', ['user' =>  $this->userRepository->fetchById($id), 'message' => $response]);
+        $this->render('user/form', [
+            'user' =>  $this->userRepository->fetchById($id), 
+            'sessionInfo' => $this->getSessionInfo(),
+            'message' => $response
+        ]);
     }
 
     public function delete(){

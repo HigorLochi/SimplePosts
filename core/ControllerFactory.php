@@ -4,7 +4,7 @@ namespace core;
 
 use PDO;
 use app\services\Session;
-use app\controllers\LoginController;
+use app\controllers\AuthController;
 use app\controllers\PostController;
 use app\controllers\UserController;
 use app\controllers\NotFoundController;
@@ -19,9 +19,9 @@ class ControllerFactory {
 
     public function create(string $controllerName) {
         return match ($controllerName) {
-            'PostController' => new PostController($this->session, new PostRepository($this->connection), new UserRepository($this->connection)),
+            'PostController' => new PostController($this->session, new PostRepository($this->connection)),
             'UserController' => new UserController($this->session, new UserRepository($this->connection)),
-            'LoginController' => new LoginController($this->session,new UserRepository($this->connection)),
+            'AuthController' => new AuthController($this->session, new UserRepository($this->connection)),
             default => new NotFoundController($this->session)
         };
     }

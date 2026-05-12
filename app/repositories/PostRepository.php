@@ -13,7 +13,7 @@ class PostRepository extends AbstractRepository{
         $query = $this->pdo->prepare(
             $this->queryBuilder
                 ->table($this->tableName)
-                ->select(['*'])
+                ->select([$this->tableName . '.*', 'users.name',' users.email',' users.isadmin'])
                 ->join(['iduser' => ['type' => 'INNER', 'table' => 'users', 'field' => 'id']])
                 ->order(["createdat"])
                 ->limit($limit, $page)
@@ -24,6 +24,23 @@ class PostRepository extends AbstractRepository{
         $query->setFetchMode(PDO::FETCH_CLASS, PostModel::class);
 
         return $query->fetchAll();
+    }
+
+    public function fetchById(int $id): PostModel|bool {
+        $query = $this->pdo->prepare(
+            $this->queryBuilder
+                ->table($this->tableName)
+                ->select([$this->tableName . '.*', 'users.name',' users.email',' users.isadmin'])
+                ->join(['iduser' => ['type' => 'INNER', 'table' => 'users', 'field' => 'id']])
+                ->where([$this->tableName . '.id'])
+                ->getQuery()
+            );
+
+        $query->bindValue(":id", $id);
+        $query->execute();
+        $query->setFetchMode(PDO::FETCH_CLASS, PostModel::class);
+
+        return $query->fetch();
     }
 
     public function countRows(): int {
@@ -55,7 +72,7 @@ class PostRepository extends AbstractRepository{
 
             $query->execute();
 
-            return true;
+            return $this->pdo->lastInsertId();
         }catch(Exception $e){
             return false;
         }

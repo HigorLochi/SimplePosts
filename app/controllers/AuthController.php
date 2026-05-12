@@ -5,7 +5,8 @@ namespace app\controllers;
 use app\services\Session;
 use app\repositories\UserRepository;
 
-class LoginController extends AbstractController{
+class AuthController extends AbstractController{
+
     public function __construct(Session $session, UserRepository $userRepository) {
         $this->session = $session;
         $this->userRepository = $userRepository;
@@ -30,5 +31,11 @@ class LoginController extends AbstractController{
         }
 
         $this->render('login', $variables);
+    }
+
+    public function logout(){
+        $this->session->unset();
+
+        $this->render('login', []);
     }
 }

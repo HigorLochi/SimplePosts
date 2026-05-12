@@ -8,20 +8,20 @@
 		<article class="post">
 			<header>
 				<div class="title">
-					<h2><a href="single.html"><?= protectedVariableText($row->getTitle()) ?></a></h2>
+					<h2><a href="index.php?<?= http_build_query(['controller' => 'post', 'action' => 'single', 'id' => $row->getId()]) ?>"><?= protectedVariableText($row->getTitle()) ?></a></h2>
 				</div>
 				<div class="meta">
 					<time class="published" datetime="2015-11-01"><?= protectedVariableText($row->getCreatedAt()) ?></time>
-					<a href="#" class="author"><span class="name"><?= protectedVariableText(limitText($row->get('name'), 18)) ?></span><img src="../storage/userphotos/test.png" alt="" /></a>
+					<a href="#" class="author"><span class="name"><?= protectedVariableText(limitText($row->get('name'), 10)) ?></span><img src="../storage/userphotos/test.png" alt="" /></a>
 				</div>
 			</header>
 			<a class="image featured"><img src="../storage/postimages/test.jpg" alt="" /></a>
 			<p><?= protectedVariableText(limitText($row->getText(), 550)) ?></p>
 			<footer>
 				<ul class="actions">
-					<li><a href="single.html" class="button large">Continue Reading</a></li>
+					<li><a href="index.php?<?= http_build_query(['controller' => 'post', 'action' => 'single', 'id' => $row->getId()]) ?>" class="button large">Continue Reading</a></li>
 				</ul>
-				<?php if($this->session->get('user_admin')): ?>
+				<?php if($sessionInfo['user_admin']): ?>
 					<ul class="stats">
 						<li><a onclick="deletePost(<?= protectedVariableText($row->getId()); ?>)" class="icon solid fa-trash">Delete post</a></li>
 					</ul>
