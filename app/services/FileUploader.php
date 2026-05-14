@@ -16,7 +16,7 @@ class FileUploader{
 
         $fileExtension = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
 
-        if(!$this->isValidFile($tmpFile) || !$this->isValidExtension($fileExtension)) 
+        if(!$this->fileExists($tmpFile) || !$this->isValidFile($tmpFile) || !$this->isValidExtension($fileExtension)) 
             return false;    
 
         $targetFileName = (string) strtotime(date("Y-m-d H:i:s"));
@@ -34,6 +34,10 @@ class FileUploader{
 
     private function getUploadPath($type): string{
         return dirname(__DIR__) . "/.." . $this->uploadPaths[$type];
+    }
+
+    private function fileExists($file){
+        return (bool) (file_exists($file));
     }
 
     private function isValidExtension($extension): bool{

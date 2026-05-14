@@ -3,5 +3,5 @@ CREATE TABLE IF NOT EXISTS `simple_posts`.`userphotos` (
     `iduser` BIGINT NOT NULL,
     `filename` VARCHAR(100) NOT NULL,
     `extension` VARCHAR(100) NOT NULL,
-    FOREIGN KEY (iduser) REFERENCES users(id)
+    FOREIGN KEY (iduser) REFERENCES users(id) ON DELETE CASCADE
 )

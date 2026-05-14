@@ -9,6 +9,22 @@ use app\models\PostImageModel;
 class PostImageRepository extends AbstractRepository{
     private $tableName = 'postimages';
 
+    public function fetchById(int $id): PostImageModel|bool {
+        $query = $this->pdo->prepare(
+            $this->queryBuilder
+                ->table($this->tableName)
+                ->select(['*'])
+                ->where(['id'])
+                ->getQuery()
+            );
+
+        $query->bindValue(":id", $id);
+        $query->execute();
+        $query->setFetchMode(PDO::FETCH_CLASS, PostImageModel::class);
+
+        return $query->fetch();
+    }
+
     public function fetchByIdPost(int $idpost): PostImageModel|bool {
         $query = $this->pdo->prepare(
             $this->queryBuilder
@@ -63,7 +79,7 @@ class PostImageRepository extends AbstractRepository{
             $query->execute();
 
             return true;
-        }catch(Exception $e){
+        }catch(Exception $e){            
             return false;
         }
     }

@@ -79,7 +79,7 @@ class PostRepository extends AbstractRepository{
     }
 
     public function insert(array $post): int|bool {
-        try{
+        try{            
             $query = $this->pdo->prepare(
                 $this->queryBuilder
                     ->table($this->tableName)

@@ -73,24 +73,17 @@ class PostController extends AbstractController{
     }
 
     public function upload($idpost){
-        $image = $this->postImageRepository->fetchByIdPost($idpost);
+        $idImage = $this->postImageRepository->insert([
+            'idpost' => $idpost, 
+            'filename' => '', 
+            'extension' => ''
+        ]);
 
-        if(!$image) {
-            $idImage = $this->postImageRepository->insert([
-                'idpost' => $idpost, 
-                'filename' => '', 
-                'extension' => ''
-            ]);
+        $imageData = $this->fileUploader->upload("image", "post");
+        if(!$imageData) return false;
 
-            $imageData = $this->fileUploader->upload("image", "post");
-            $imageData['id'] = $idImage;
-        }else{
-            $imageData = $this->fileUploader->upload("image", "post");
-            $imageData['id'] = $photo->getId();
-        }
+        $this->postImageRepository->update(array_merge($imageData, ['id' => $idImage]));
 
-        $this->postImageRepository->update($imageData);
-
-        return;
+        return true;
     }
 }

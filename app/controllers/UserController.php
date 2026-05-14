@@ -76,7 +76,7 @@ class UserController extends AbstractController{
         $this->userRepository->deleteById($id);
     }
 
-    public function upload($iduser){
+    public function upload($iduser): bool{
         $photo = $this->userPhotoRepository->fetchByIdUser($iduser);
 
         if(!$photo) {
@@ -86,15 +86,14 @@ class UserController extends AbstractController{
                 'extension' => ''
             ]);
 
-            $photoData = $this->fileUploader->upload("photo", "user");
-            $photoData['id'] = $idPhoto;
-        }else{
-            $photoData = $this->fileUploader->upload("photo", "user");
-            $photoData['id'] = $photo->getId();
+            $photo = $this->userPhotoRepository->fetchById($idPhoto);
         }
 
-        $this->userPhotoRepository->update($photoData);
+        $photoData = $this->fileUploader->upload("photo", "user");
+        if(!$photoData) return false;
 
-        return;
+        $this->userPhotoRepository->update(array_merge($photoData, ['id' => $photo->getId()]));
+
+        return true;
     }
 }

@@ -9,7 +9,7 @@
         <form enctype="multipart/form-data" method="post" action="#">
             <div class="row gtr-uniform">
                 <div class="col-2 col-12-xsmall">
-                    <input onchange="showImage(this)" type="file" name="image" id="image" value="" placeholder="Title" />
+                    <input required onchange="showImage(this)" type="file" name="image" id="image" value="" placeholder="Title" />
                 </div>
                 <div class="col-10 col-12-xsmall">
                     <span class="image featured"><img style="display:none" id="post-image" alt="" /></span>

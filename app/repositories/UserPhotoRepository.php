@@ -9,6 +9,22 @@ use app\models\UserPhotoModel;
 class UserPhotoRepository extends AbstractRepository{
     private $tableName = 'userphotos';
 
+    public function fetchById(int $id): UserPhotoModel|bool {
+        $query = $this->pdo->prepare(
+            $this->queryBuilder
+                ->table($this->tableName)
+                ->select(['*'])
+                ->where(['id'])
+                ->getQuery()
+            );
+
+        $query->bindValue(":id", $id);
+        $query->execute();
+        $query->setFetchMode(PDO::FETCH_CLASS, UserPhotoModel::class);
+
+        return $query->fetch();
+    }
+
     public function fetchByIdUser(int $iduser): UserPhotoModel|bool {
         $query = $this->pdo->prepare(
             $this->queryBuilder
