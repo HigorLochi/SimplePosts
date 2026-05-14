@@ -12,76 +12,52 @@ XAMPP (development environment)
 
 ## Pre-requisites
 
-Before running the project, you need to have the following installed:
-
-PHP 8.4.0
-XAMPP (or another local server)
-Web browser
-MySQL
+1. PHP 8.4.0
+2. XAMPP (or another local server)
+3. Web browser
+4. MySQL
 
 ## PHP 8.4.0 Installation
 
-Windows (manual):
-Access the official website:
-
-https://www.php.net/downloads
-Download PHP 8.4 Thread Safe (zip)
-
-Extract to a folder, for example:
-
-C:\php
-Add to the system PATH:
-Search for "Environment Variables"
-Edit the Path
-
-Add:
-
-C:\php
-
-Test in the terminal:
-
-php -v
+### Windows (manual):
+1. Access the official website: https://www.php.net/downloads
+2. Extract to a folder, for example: C:\php
+3. Add to the system PATH: Search for "Environment Variables"
+4. Edit the Path
+5. Add: C:\php
+6. Test in the terminal: php -v
 
 ## XAMPP Installation
 
-Download the XAMPP:
-
-https://www.apachefriends.org/index.html
-Install normally
-Open the XAMPP Control Panel
-Start:
-Apache
-MySQL
+1. Download XAMPP: https://www.apachefriends.org/index.html
+2. Open XAMPP and start: Apache, MySQL
 
 ## Project Configuration
 
-Clone or download this repository:
-
-git clone https://github.com/your-username/your-project.git
-
-Place the folder inside:
-
-C:\xampp\htdocs\
-
-Access in your browser:
-
-http://localhost/your-project/public
+1. Clone or download this repository: git clone https://github.com/your-username/your-project.git
+2. Place the folder inside: C:\xampp\htdocs\
+3. Access in your browser: http://localhost/your-project/public
 
 ## Features
 
-Clear separation of layers (MVC)
-Layout reuse
-Scalable organization
+1. Clear separation of layers (MVC)
+2. Layout reuse
+3. Scalable organization
 
 ## Security (basic)
 
-Use of htmlspecialchars to prevent XSS
-Data validation on the backend
-PHP session login
+1. Use of htmlspecialchars to prevent XSS
+2. Data validation on the backend
+3. PHP session login
+
+## Improvements to be done
+
+1. Likes
+2. Comments
 
 ## Contribution
 
 Feel free to contribute:
 
-Fork the project
-Create a branch
+1. Fork the project
+2. Create a branch
