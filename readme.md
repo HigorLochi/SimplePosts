@@ -4,11 +4,11 @@ A PHP web application built with the MVC architectural pattern, designed for man
 The system features two complete CRUD modules responsible for handling publication management and user-related content, allowing full creation, visualization, updating, and deletion of records. It also includes a secure file upload system for managing images and media associated with publications.
 
 ## Technologies Used
-PHP 8.4.0
-HTML5 / CSS3 / JavaScript
-HTML5UP Template
-MySQL
-XAMPP (development environment)
+1. PHP 8.4.0
+2. HTML5 / CSS3 / JavaScript
+3. HTML5UP Template
+4. MySQL
+5. XAMPP (development environment)
 
 ## Pre-requisites
 
