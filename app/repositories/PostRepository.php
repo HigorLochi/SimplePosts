@@ -18,8 +18,8 @@ class PostRepository extends AbstractRepository{
                     'users.name',
                     'users.email',
                     'users.isadmin', 
-                    'CONCAT(postimages.filename, ".", postimages.extension) AS postimage',
-                    'CONCAT(userphotos.filename, ".", userphotos.extension) AS userphoto'
+                    'IF(postimages.filename, CONCAT(postimages.filename, ".", postimages.extension), NULL) AS postimage',
+                    'IF(userphotos.filename, CONCAT(userphotos.filename, ".", userphotos.extension), NULL) AS userphoto'
                 ])
                 ->join([
                     ['type' => 'INNER', 'leftTable' => $this->tableName, 'leftField' => 'iduser', 'rightTable' => 'users', 'rightField' => 'id'],
@@ -46,8 +46,8 @@ class PostRepository extends AbstractRepository{
                     'users.name',
                     'users.email',
                     'users.isadmin', 
-                    'CONCAT(postimages.filename, ".", postimages.extension) AS postimage',
-                    'CONCAT(userphotos.filename, ".", userphotos.extension) AS userphoto'
+                    'IF(postimages.filename, CONCAT(postimages.filename, ".", postimages.extension), NULL) AS postimage',
+                    'IF(userphotos.filename, CONCAT(userphotos.filename, ".", userphotos.extension), NULL) AS userphoto'
                 ])
                 ->join([
                     ['type' => 'INNER', 'leftTable' => $this->tableName, 'leftField' => 'iduser', 'rightTable' => 'users', 'rightField' => 'id'],

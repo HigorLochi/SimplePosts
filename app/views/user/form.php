@@ -9,7 +9,7 @@
         <form enctype="multipart/form-data" method="post" action="#">
             <div class="row gtr-uniform">
                 <div class="col-2 col-12-xsmall">
-                    <input required onchange="showPhoto(this)" type="file" name="photo" id="photo" value="" placeholder="Title" />
+                    <input onchange="showPhoto(this)" type="file" name="photo" id="photo" value="" placeholder="Title" />
                 </div>
                 <div class="col-10 col-12-xsmall">
                     <span class="author"><img <?= (!$user->get('photo')) ? 'style="display:none"' : "" ?> id="user-photo" src="<?= $photoPath . $user->get('photo'); ?>" alt="" /></span>

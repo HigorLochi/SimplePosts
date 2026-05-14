@@ -12,10 +12,22 @@
 				</div>
 				<div class="meta">
 					<time class="published" datetime="2015-11-01"><?= protectedVariableText($row->getCreatedAt()) ?></time>
-					<a href="#" class="author"><span class="name"><?= protectedVariableText(limitText($row->get('name'), 10)) ?></span><img src="<?= $photoPath . $row->get('userphoto'); ?>" alt="" /></a>
+					<a href="#" class="author"><span class="name"><?= protectedVariableText(limitText($row->get('name'), 10)) ?></span>
+						<?php if($row->get('userphoto')): ?>
+							<img src="<?= $photoPath . $row->get('userphoto'); ?>"/>
+						<?php else: ?>
+							<img src="<?= $photoPath . 'default.png'; ?>"/>
+						<?php endif; ?>
+					</a>
 				</div>
 			</header>
-			<a class="image featured"><img src="<?= $imagePath . $row->get('postimage'); ?>" alt="" /></a>
+			<a class="image featured">
+				<?php if($row->get('postimage')): ?>
+					<img src="<?= $imagePath . $row->get('postimage'); ?>"/>
+				<?php else: ?>
+					<img src="<?= $imagePath . 'default.jpg'; ?>"/>
+				<?php endif; ?>
+			</a>
 			<p><?= protectedVariableText(limitText($row->getText(), 550)) ?></p>
 			<footer>
 				<ul class="actions">
