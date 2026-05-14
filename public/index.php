@@ -22,7 +22,7 @@ try{
 
 $controllerFactory = new core\ControllerFactory($session, $connection);
 
-if(!$session->isAuthenticated()){
+if(!$session->isAuthenticated() || $session->isTimedOut()){
     $authController = $controllerFactory->create('AuthController');
     $authController->login();
 

@@ -23,6 +23,7 @@ class AuthController extends AbstractController{
                 $this->session->set('user_name', $user->getName());
                 $this->session->set('user_email', $user->getEmail());
                 $this->session->set('user_admin', $user->isAdmin());
+                $this->session->set('login_date', strtotime(date("Y-m-d H:i:s")));
 
                 header("Location: " . $_SERVER['PHP_SELF']);
             }else{

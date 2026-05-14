@@ -50,8 +50,9 @@ class PostRepository extends AbstractRepository{
                     'CONCAT(userphotos.filename, ".", userphotos.extension) AS userphoto'
                 ])
                 ->join([
-                    'iduser' => ['type' => 'INNER', 'table' => 'users', 'field' => 'id'],
-                    'id' => ['type' => 'LEFT', 'table' => 'postimages', 'field' => 'idpost']
+                    ['type' => 'INNER', 'leftTable' => $this->tableName, 'leftField' => 'iduser', 'rightTable' => 'users', 'rightField' => 'id'],
+                    ['type' => 'LEFT', 'leftTable' => $this->tableName, 'leftField' => 'id', 'rightTable' => 'postimages', 'rightField' => 'idpost'],
+                    ['type' => 'LEFT', 'leftTable' => 'users', 'leftField' => 'id', 'rightTable' => 'userphotos', 'rightField' => 'iduser']
                 ])
                 ->where([$this->tableName . '.id'])
                 ->getQuery()

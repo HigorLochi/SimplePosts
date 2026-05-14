@@ -5,6 +5,8 @@ namespace app\services;
 use DateTime;
 
 class Session{
+    private $sessionDuration = 60 * 60;
+
     public function create(): void{
         if(!$this->isCreated())
             session_start();
@@ -27,11 +29,19 @@ class Session{
             return null;
     }
 
+    public function getSessionDuration(){
+        return $this->sessionDuration;
+    }
+
     public function isCreated(): bool{
         return !(session_status() === PHP_SESSION_NONE);
     }
 
     public function isAuthenticated(): bool{
         return $this->get('user_id') !== null;
+    }
+
+    public function isTimedOut(): bool{
+        return (strtotime(date("Y-m-d H:i:s")) - $this->get('login_date')) > $this->getSessionDuration();
     }
 }
