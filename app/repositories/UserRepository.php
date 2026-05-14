@@ -3,6 +3,7 @@
 namespace app\repositories;
 
 use PDO;
+use database\QueryBuilder;
 use app\models\UserModel;
 
 class UserRepository extends AbstractRepository{
@@ -28,8 +29,9 @@ class UserRepository extends AbstractRepository{
         $query = $this->pdo->prepare(
             $this->queryBuilder
                 ->table($this->tableName)
-                ->select(['*'])
-                ->where(['id'])
+                ->select(['users.*', 'CONCAT(userphotos.filename, ".", userphotos.extension) AS photo'])
+                ->join([['type' => 'LEFT', 'leftTable' => $this->tableName, 'leftField' => 'id', 'rightTable' => 'userphotos', 'rightField' => 'iduser']])
+                ->where([$this->tableName . '.id'])
                 ->getQuery()
             );
 
@@ -69,7 +71,7 @@ class UserRepository extends AbstractRepository{
         return $query->fetch()['count'];
     }
 
-    public function insert(array $user): bool {
+    public function insert(array $user): int|bool {
         try{
             $query = $this->pdo->prepare(
                 $this->queryBuilder

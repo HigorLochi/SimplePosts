@@ -5,7 +5,6 @@ namespace app\models;
 class PostModel extends AbstractModel{
     private int $id = 0; 
     private string $iduser = "";
-    private ?string $idimage = "";
     private string $title = "";
     private string $text = "";
     private string $createdat;
@@ -19,10 +18,6 @@ class PostModel extends AbstractModel{
 
     public function getIdUser(): int{
         return $this->iduser;
-    }
-
-    public function getIdImage(): int{
-        return $this->idimage;
     }
 
     public function getTitle(): string{
@@ -40,10 +35,6 @@ class PostModel extends AbstractModel{
     // SETTERS
     public function setIdUser(int $iduser): void{
         $this->iduser = $iduser;
-    }
-
-    public function setIdImage(int $idimage): void{
-        $this->idimage = $idimage;
     }
 
     public function setTitle(int $title): void{

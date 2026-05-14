@@ -24,11 +24,11 @@ class QueryBuilder{
     }
 
     public function join(array $config){
-        foreach($config as $field => $join){
-            if(!isset($join['table']) || !isset($join['field'])) continue;
+        foreach($config as $join){
+            if(!isset($join['leftTable']) || !isset($join['leftField']) || !isset($join['rightTable']) || !isset($join['rightField'])) continue;
 
             $this->query .= ((isset($join['type'])) ? $join['type'] : 'INNER') . ' JOIN ';
-            $this->query .= $join['table'] . " ON " . $this->table . ".$field = ".$join['table'] . '.' . $join['field'] . " ";
+            $this->query .= $join['rightTable'] . " ON " . $join['leftTable'] . "." . $join['leftField'] . " = ".$join['rightTable'] . '.' . $join['rightField'] . " ";
         }
 
         return $this;

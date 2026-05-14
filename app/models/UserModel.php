@@ -2,23 +2,14 @@
 
 namespace app\models;
 
-class UserModel{
+class UserModel extends AbstractModel{
     private int $id = 0; 
     private string $name = "";
     private string $email = "";
     private string $password = "";
     private bool $isadmin = false;
-    private ?int $idphoto = null;
 
     public function __construct(){}
-
-    // public function __construct(string $name, string $email, string $password, bool $admin, int $idphoto){
-    //     $this->name = $name;
-    //     $this->email = $email;
-    //     $this->password = password_hash($password);
-    //     $this->admin = $admin;
-    //     $this->idphoto = $idphoto;
-    // }
 
     // GETTERS
     public function getId(): int{
@@ -39,10 +30,6 @@ class UserModel{
 
     public function isAdmin(): bool{
         return $this->isadmin;
-    }
-
-    public function getIdPhoto(): int{
-        return $this->idphoto;
     }
 
     // SETTERS

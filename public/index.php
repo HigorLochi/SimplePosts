@@ -15,6 +15,7 @@ try{
     $connection = $databaseConnection->connectWithoutDatabase();
 
     (new database\Migrator($connection))->migrate();
+    (new database\Seeder($connection))->seed();
 
     $connection = $databaseConnection->connectWithDatabase();
 }

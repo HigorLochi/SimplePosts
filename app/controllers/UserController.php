@@ -6,11 +6,15 @@ use app\models\UserModel;
 
 class UserController extends AbstractController{
     private $userRepository;
+    private $userPhotoRepository;
+    private $fileUploader;
 
-    public function __construct($session, $userRepository) {
+    public function __construct($session, $userRepository, $userPhotoRepository, $fileUploader) {
         parent::__construct($session);
         
         $this->userRepository = $userRepository;
+        $this->userPhotoRepository = $userPhotoRepository;
+        $this->fileUploader = $fileUploader;
     }
 
     public function list(){
@@ -32,11 +36,16 @@ class UserController extends AbstractController{
         $response = null;
 
         if($this->isPostMethod()) {
-            $response = $this->userRepository->insert($_POST) ? "User created." : "An error has ocurred.";
+            $userInsertedId = $this->userRepository->insert($_POST);
+
+            if($_FILES) $this->upload($userInsertedId);
+
+            $response = ($userInsertedId) ? "User created." : "An error has ocurred.";
         }
 
         $this->render('user/form', [
-            'user' =>  new UserModel(), 
+            'user' =>  new UserModel(),
+            'photoPath' => $this->fileUploader->getWebStoragePath("user"),
             'sessionInfo' => $this->getSessionInfo(),
             'message' => $response
         ]);
@@ -48,11 +57,15 @@ class UserController extends AbstractController{
 
         if($this->isPostMethod()) {
             $_POST['id'] = $id;
+
+            if($_FILES) $this->upload($id);
+
             $response = $this->userRepository->update($_POST) ? "User updated." : "An error has ocurred.";
         }
         
         $this->render('user/form', [
             'user' =>  $this->userRepository->fetchById($id), 
+            'photoPath' => $this->fileUploader->getWebStoragePath("user"),
             'sessionInfo' => $this->getSessionInfo(),
             'message' => $response
         ]);
@@ -61,5 +74,27 @@ class UserController extends AbstractController{
     public function delete(){
         $id = (int) $_POST['id'];
         $this->userRepository->deleteById($id);
+    }
+
+    public function upload($iduser){
+        $photo = $this->userPhotoRepository->fetchByIdUser($iduser);
+
+        if(!$photo) {
+            $idPhoto = $this->userPhotoRepository->insert([
+                'iduser' => $iduser, 
+                'filename' => '', 
+                'extension' => ''
+            ]);
+
+            $photoData = $this->fileUploader->upload("photo", "user");
+            $photoData['id'] = $idPhoto;
+        }else{
+            $photoData = $this->fileUploader->upload("photo", "user");
+            $photoData['id'] = $photo->getId();
+        }
+
+        $this->userPhotoRepository->update($photoData);
+
+        return;
     }
 }

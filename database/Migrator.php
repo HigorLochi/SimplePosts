@@ -9,10 +9,10 @@ class Migrator{
     private $migrationsPath = __DIR__ . '/migrations/';
     private $allowedFiles = [
         'create_database.sql',
-        'create_postimages_table.sql',
-        'create_userphotos_table.sql',
         'create_users_table.sql',
-        'create_posts_table.sql'
+        'create_posts_table.sql',
+        'create_postimages_table.sql',
+        'create_userphotos_table.sql'
     ];
 
     public function __construct(private PDO $pdo) {}

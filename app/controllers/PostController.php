@@ -7,11 +7,15 @@ use app\models\PostModel;
 
 class PostController extends AbstractController{
     private $postRepository;
+    private $postImageRepository;
+    private $fileUploader;
 
-    public function __construct($session, $postRepository) {
+    public function __construct($session, $postRepository, $postImageRepository, $fileUploader) {
         parent::__construct($session);
 
         $this->postRepository = $postRepository;
+        $this->postImageRepository = $postImageRepository;
+        $this->fileUploader = $fileUploader;
     }
 
     public function single(){
@@ -19,6 +23,8 @@ class PostController extends AbstractController{
         
         $this->render('post/single', [
             'post' =>  $this->postRepository->fetchById($id), 
+            'imagePath' => $this->fileUploader->getWebStoragePath("post"),
+            'photoPath' => $this->fileUploader->getWebStoragePath("user"),
             'sessionInfo' => $this->getSessionInfo()
         ]);
     }
@@ -34,6 +40,8 @@ class PostController extends AbstractController{
             'limitPerPage' => $this->limitPerPage,
             'page' => $page,
             'pagesCount' => $pagesCount,
+            'imagePath' => $this->fileUploader->getWebStoragePath("post"),
+            'photoPath' => $this->fileUploader->getWebStoragePath("user"),
             'sessionInfo' => $this->getSessionInfo()
         ]);
     }
@@ -42,13 +50,14 @@ class PostController extends AbstractController{
         $response = null;
 
         if($this->isPostMethod()) {
-            if($this->postRepository->insert(array_merge($_POST, [
+            $postInsertedId = $this->postRepository->insert(array_merge($_POST, [
                 'iduser' => (int) $this->session->get('user_id'),
                 'createdat' => new DateTime()->format('Y-m-d H:i:s')
-            ])))
-                $response = "Post created.";
-            else 
-                $response = "An error has ocurred.";
+            ]));
+
+            if($_FILES) $this->upload($postInsertedId);
+
+            $response = ($postInsertedId) ? "Post created." : "An error has ocurred.";
         }
 
         $this->render('post/form', [
@@ -61,5 +70,27 @@ class PostController extends AbstractController{
     public function delete(){
         $id = (int) $_POST['id'];
         $this->postRepository->deleteById($id);
+    }
+
+    public function upload($idpost){
+        $image = $this->postImageRepository->fetchByIdPost($idpost);
+
+        if(!$image) {
+            $idImage = $this->postImageRepository->insert([
+                'idpost' => $idpost, 
+                'filename' => '', 
+                'extension' => ''
+            ]);
+
+            $imageData = $this->fileUploader->upload("image", "post");
+            $imageData['id'] = $idImage;
+        }else{
+            $imageData = $this->fileUploader->upload("image", "post");
+            $imageData['id'] = $photo->getId();
+        }
+
+        $this->postImageRepository->update($imageData);
+
+        return;
     }
 }

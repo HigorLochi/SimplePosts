@@ -1,0 +1,5 @@
+storage/userphotos/*
+storage/postimages/*
+
+!storage/userphotos/default.png
+!storage/postimages/default.jpg

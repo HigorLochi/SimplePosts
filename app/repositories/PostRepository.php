@@ -13,8 +13,19 @@ class PostRepository extends AbstractRepository{
         $query = $this->pdo->prepare(
             $this->queryBuilder
                 ->table($this->tableName)
-                ->select([$this->tableName . '.*', 'users.name',' users.email',' users.isadmin'])
-                ->join(['iduser' => ['type' => 'INNER', 'table' => 'users', 'field' => 'id']])
+                ->select([
+                    $this->tableName . '.*', 
+                    'users.name',
+                    'users.email',
+                    'users.isadmin', 
+                    'CONCAT(postimages.filename, ".", postimages.extension) AS postimage',
+                    'CONCAT(userphotos.filename, ".", userphotos.extension) AS userphoto'
+                ])
+                ->join([
+                    ['type' => 'INNER', 'leftTable' => $this->tableName, 'leftField' => 'iduser', 'rightTable' => 'users', 'rightField' => 'id'],
+                    ['type' => 'LEFT', 'leftTable' => $this->tableName, 'leftField' => 'id', 'rightTable' => 'postimages', 'rightField' => 'idpost'],
+                    ['type' => 'LEFT', 'leftTable' => 'users', 'leftField' => 'id', 'rightTable' => 'userphotos', 'rightField' => 'iduser']
+                ])
                 ->order(["createdat"])
                 ->limit($limit, $page)
                 ->getQuery()
@@ -30,8 +41,18 @@ class PostRepository extends AbstractRepository{
         $query = $this->pdo->prepare(
             $this->queryBuilder
                 ->table($this->tableName)
-                ->select([$this->tableName . '.*', 'users.name',' users.email',' users.isadmin'])
-                ->join(['iduser' => ['type' => 'INNER', 'table' => 'users', 'field' => 'id']])
+                ->select([
+                    $this->tableName . '.*', 
+                    'users.name',
+                    'users.email',
+                    'users.isadmin', 
+                    'CONCAT(postimages.filename, ".", postimages.extension) AS postimage',
+                    'CONCAT(userphotos.filename, ".", userphotos.extension) AS userphoto'
+                ])
+                ->join([
+                    'iduser' => ['type' => 'INNER', 'table' => 'users', 'field' => 'id'],
+                    'id' => ['type' => 'LEFT', 'table' => 'postimages', 'field' => 'idpost']
+                ])
                 ->where([$this->tableName . '.id'])
                 ->getQuery()
             );
@@ -56,7 +77,7 @@ class PostRepository extends AbstractRepository{
         return $query->fetch()['count'];
     }
 
-    public function insert(array $post): bool {
+    public function insert(array $post): int|bool {
         try{
             $query = $this->pdo->prepare(
                 $this->queryBuilder

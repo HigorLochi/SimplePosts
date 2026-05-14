@@ -4,29 +4,43 @@ namespace app\services;
 
 class FileUploader{
     private $uploadPaths = [
-        'user' => "../../storage/userphotos/",
-        'post' => "../../storage/postimages/"
+        'user' => "/storage/userphotos/",
+        'post' => "/storage/postimages/"
     ];
 
     private $validExtensions = ["jpg", "png", "jpeg"];
 
-    public function upload(string $tempFileName, string $targetFileName, string $type): bool{
+    public function upload(string $tempFileName, string $type): array|bool {
         $tmpFile = $_FILES[$tempFileName]["tmp_name"];
-        $targetFile = $uploadPaths[$type] . $targetFileName;
+        $targetFile = $this->uploadPaths[$type] . basename($_FILES[$tempFileName]["name"]);
 
-        $fileExtension = strtolower(pathinfo($tmpFile,PATHINFO_EXTENSION));
+        $fileExtension = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
 
         if(!$this->isValidFile($tmpFile) || !$this->isValidExtension($fileExtension)) 
             return false;    
-        
-        return (move_uploaded_file($tmpFile, $targetFile . $fileExtension));
+
+        $targetFileName = (string) strtotime(date("Y-m-d H:i:s"));
+        $targetFile = $this->getUploadPath($type) . $targetFileName . '.' .$fileExtension;
+
+        if(move_uploaded_file($tmpFile, $targetFile))
+            return ["filename" => $targetFileName, "extension" => $fileExtension];
+        else 
+            return false;
+    }
+
+    public function getWebStoragePath($type): string{
+        return ".." . $this->uploadPaths[$type];
+    }
+
+    private function getUploadPath($type): string{
+        return dirname(__DIR__) . "/.." . $this->uploadPaths[$type];
     }
 
     private function isValidExtension($extension): bool{
         return (in_array($extension, $this->validExtensions));
     }
 
-    private function isValidFile($file){
-        return (getimagesize($file));
+    private function isValidFile($file): bool{
+        return (bool)(getimagesize($file));
     }
 }
